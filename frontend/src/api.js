@@ -1,7 +1,10 @@
-// Backend se baat karne ka ek hi jagah code
+// Local mein VITE_API_URL khaali rehta hai (vite proxy kaam karti hai).
+// Live deploy par VITE_API_URL = backend ka URL (e.g. https://swaad-express-api.onrender.com)
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
 async function request(path, options = {}) {
   try {
-    const res = await fetch('/api' + path, {
+    const res = await fetch(API_URL + '/api' + path, {
       headers: { 'Content-Type': 'application/json' },
       ...options,
     });
@@ -9,7 +12,7 @@ async function request(path, options = {}) {
     if (!res.ok || !body.success) throw new Error(body.message || 'Kuch galat ho gaya.');
     return body.data;
   } catch (err) {
-    if (err instanceof TypeError) throw new Error('Server se connect nahi ho paya. Pehle backend start karo.');
+    if (err instanceof TypeError) throw new Error('Server se connect nahi ho paya. Thodi der baad dobara try karo.');
     throw err;
   }
 }
